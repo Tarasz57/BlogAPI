@@ -21,7 +21,7 @@ public class BlogController {
     @Autowired
     BlogPostRepository blogPostRepository;
 
-    @PostMapping("/blog/new")
+    @PostMapping("/blog")
     public ResponseEntity<String> newPost(@RequestBody BlogPost blogPost){
         blogPostRepository.save(blogPost);
         return new ResponseEntity<String>("Post successful", HttpStatus.OK);
@@ -33,12 +33,13 @@ public class BlogController {
         return new ResponseEntity<String>("Delete successful", HttpStatus.OK);
     }
 
-    @GetMapping("/blog/posts")
+    @GetMapping("/blog")
+    // TODO spring security
     public List<BlogPost> getUserPosts(@RequestParam("user") String email){
         return blogPostRepository.findByAuthor(email);
     }
 
-    @PutMapping("/blog/update")
+    @PutMapping("/blog")
     public ResponseEntity<String> updatePost(@RequestBody BlogPost blogPost){
         blogPostRepository.save(blogPost);
         return new ResponseEntity<String>("Update successful", HttpStatus.OK);

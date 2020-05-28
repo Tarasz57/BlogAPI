@@ -2,6 +2,7 @@ package com.ignitis.blog.controllers;
 
 import com.ignitis.blog.entities.User;
 import com.ignitis.blog.repositories.UserRepository;
+import com.ignitis.blog.services.DatabaseServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class UserController {
 
     @PostMapping("/user/registration")
     public ResponseEntity<String> registerUser(@RequestBody User user){
-        if(userRepository.existsById(user.getEmail())){
+        if(DatabaseServices.checkForUser(userRepository,user.getEmail())) {
             return new ResponseEntity<String>("User already exists", HttpStatus.UNPROCESSABLE_ENTITY);
         }
         userRepository.save(user);
@@ -26,17 +27,10 @@ public class UserController {
 
     @PostMapping("/user/login")
     public ResponseEntity<String> loginUser(@RequestBody User user) throws Exception {
-        User userFromDB = userRepository.findById(user.getEmail()).orElseThrow(() -> new Exception("User doesn't exist"));
-        if(userFromDB.getPassword().equals(user.getPassword())){
+        if(DatabaseServices.checkCredentials(userRepository,user)){
             return new ResponseEntity<String>("Login successful", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
     }
-
-//    @GetMapping("/user/get")
-//    public ResponseEntity<User> getUser() throws Exception {
-//        User user = userRepository.findById("dei.bal@gmail.com").orElseThrow(() -> new Exception("User not found"));
-//        return ResponseEntity.ok().body(user);
-//    }
 }
