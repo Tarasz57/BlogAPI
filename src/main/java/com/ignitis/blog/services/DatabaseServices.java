@@ -14,7 +14,7 @@ public class DatabaseServices {
 
     public static boolean checkCredentials(UserRepository userRepository, User user) throws Exception {
         User userFromDB = userRepository.findById(user.getEmail()).orElseThrow(() -> new Exception("User doesn't exist"));
-        if(userFromDB.getPassword().equals(user.getEmail())){
+        if(userFromDB.getPassword().equals(user.getPassword())){
             return true;
         }
         return false;
